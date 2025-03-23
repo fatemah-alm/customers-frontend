@@ -1,0 +1,53 @@
+<div
+  class="flex justify-between p-3 text-sm md:text-xl font-mono text-indigo-950 hover:text-indigo-500 transition-colors duration-300"
+>
+  <div class="w-1/4 items-center">Fatima</div>
+  <div class="w-1/4 items-center">123456789</div>
+  <div class="w-1/4 items-center">1996-04-29</div>
+  <div class="w-1/4 items-center">F</div>
+  <div class="relative">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      class="size-5 cursor-pointer"
+      (click)="toggleList($event)"
+    >
+      <path
+        d="M3 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM8.5 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM15.5 8.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"
+      />
+    </svg>
+
+    <!-- Dropdown List -->
+    <div
+      id="list"
+      (click)="$event.stopPropagation()"
+      class="absolute right-0 mt-2 bg-white rounded shadow-md p-4 w-40 hidden opacity-0 transition-opacity duration-300"
+    >
+      <div class="hover:bg-gray-200 p-2 cursor-pointer">Edit Customer</div>
+      <div class="hover:bg-gray-200 p-2 cursor-pointer" (click)="showWarning()">
+        Delete Customer
+      </div>
+    </div>
+  </div>
+  <div
+    id="warning"
+    class="fixed left-0 top-0 bg-black/50 w-screen h-screen hidden opacity-0 flex justify-center items-center transition-opacity duration-500"
+  >
+    <div class="bg-white rounded shadow-md p-8 w-[40%]">
+      <div>Are you sure you want to delete this customer?</div>
+      <button
+        (click)="hideWarning()"
+        class="bg-gray-500 text-white px-4 py-2 rounded"
+      >
+        cancel
+      </button>
+      <button
+        (click)="hideWarning()"
+        class="bg-red-700 text-white px-4 py-2 rounded"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

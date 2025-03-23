@@ -1,11 +1,16 @@
 <div class="mx-auto bg-indigo-500 h-50px">
   <div class="p-4 ms-auto flex items-center">
-    <a href="">
+    <a [routerLink]="['']">
       <h3 class="text-white">customers dashboard</h3>
     </a>
 
     <div class="ms-auto flex items-center">
-      <a href="" class="bg-indigo-700 text-white px-4 py-2 rounded"> login </a>
+      <a
+        [routerLink]="['/login']"
+        class="bg-indigo-700 text-white px-4 py-2 rounded"
+      >
+        login
+      </a>
     </div>
   </div>
 </div>
