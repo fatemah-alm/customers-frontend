@@ -1,15 +1,77 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
 import { CustomerCardComponent } from '../customer-card/customer-card.component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { CustomerService } from '../../../services/customer.service';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-dashboard',
-  imports: [CustomerCardComponent, ReactiveFormsModule],
+  imports: [CustomerCardComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   template: ` <button (click)="openPopup()">Open Popup</button> `,
 })
 export class DashboardComponent {
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  customers: any[] = [];
+  addCustomerForm = new FormGroup({
+    name: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    number: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(9)],
+    }),
+    dob: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    gender: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+  });
+
+  constructor(
+    private customerService: CustomerService,
+    private el: ElementRef,
+    private renderer: Renderer2
+  ) {}
+
+  get name() {
+    return this.addCustomerForm.controls.name;
+  }
+  get number() {
+    return this.addCustomerForm.controls.number;
+  }
+  get dob() {
+    return this.addCustomerForm.controls.dob;
+  }
+  get gender() {
+    return this.addCustomerForm.controls.gender;
+  }
+  validateNumberInput(event: KeyboardEvent) {
+    const charCode = event.key;
+    if (!/^\d$/.test(charCode)) {
+      event.preventDefault();
+    }
+  }
+
+  ngOnInit() {
+    this.loadCustomers();
+  }
+
+  loadCustomers() {
+    this.customerService.getCustomers().subscribe((data: any) => {
+      this.customers = data;
+      console.log(this.customers);
+    });
+  }
 
   showDialog() {
     const dialog = this.el.nativeElement.querySelector('#dialog');
@@ -31,22 +93,31 @@ export class DashboardComponent {
     }, 500);
   }
 
-  addCustomerForm = new FormGroup({
-    name: new FormControl<string>('', { nonNullable: true }),
-    number: new FormControl<number>(0, { nonNullable: true }),
-    dob: new FormControl<string>('', { nonNullable: true }),
-    gender: new FormControl<string>('', { nonNullable: true }),
-  });
-
   onFormSubmit() {
-    console.log(this.addCustomerForm.value);
-    this.hideDialog();
+    let payload = {
+      name: this.addCustomerForm.value.name,
+      number: Number(this.addCustomerForm.value.number),
+      dob: this.addCustomerForm.value.dob,
+      gender: this.addCustomerForm.value.gender,
+    };
+
+    this.customerService.addCustomer(payload).subscribe({
+      next: (v) => console.log(v),
+      error: (e) => console.log(e),
+      complete: () => {
+        this.loadCustomers();
+        this.hideDialog();
+        // add here toast for customer added succesfully
+      },
+    });
   }
 
-  validateNumberInput(event: KeyboardEvent) {
-    const charCode = event.key;
-    if (!/^\d$/.test(charCode)) {
-      event.preventDefault();
-    }
+  onDeleteCustomer(customerId: string) {
+    this.customerService.deleteCustomer(customerId).subscribe(() => {
+      console.log('Customer deleted');
+    });
+    this.customers = this.customers.filter(
+      (customer) => customer.id !== customerId
+    );
   }
 }

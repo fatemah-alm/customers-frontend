@@ -4,6 +4,7 @@ import { NavBarComponent } from './core/components/nav-bar/nav-bar.component';
 import { DashboardComponent } from './core/components/dashboard/dashboard.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './features/auth/pages/login/login.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ import { LoginComponent } from './features/auth/pages/login/login.component';
     NavBarComponent,
     DashboardComponent,
     ReactiveFormsModule,
+    HttpClientModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

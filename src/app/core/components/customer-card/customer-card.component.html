@@ -1,10 +1,12 @@
 <div
   class="flex justify-between p-3 text-sm md:text-xl font-mono text-indigo-950 hover:text-indigo-500 transition-colors duration-300"
 >
-  <div class="w-1/4 items-center">Fatima</div>
-  <div class="w-1/4 items-center">123456789</div>
-  <div class="w-1/4 items-center">1996-04-29</div>
-  <div class="w-1/4 items-center">F</div>
+  <div class="w-1/4 items-center">{{ customer.name }}</div>
+  <div class="w-1/4 items-center">{{ customer.number }}</div>
+  <div class="w-1/4 items-center">
+    {{ customer.dob.slice(0, 10) }}
+  </div>
+  <div class="w-1/4 items-center">{{ customer.gender }}</div>
   <div class="relative">
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +45,7 @@
         cancel
       </button>
       <button
-        (click)="hideWarning()"
+        (click)="onDelete()"
         class="bg-red-700 text-white px-4 py-2 rounded"
       >
         Delete
