@@ -1,20 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NavBarComponent } from './core/components/nav-bar/nav-bar.component';
-import { DashboardComponent } from './core/components/dashboard/dashboard.component';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LoginComponent } from './features/auth/pages/login/login.component';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    NavBarComponent,
-    DashboardComponent,
-    ReactiveFormsModule,
-    HttpClientModule,
-  ],
+  imports: [RouterOutlet, NavBarComponent, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

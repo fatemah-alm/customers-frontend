@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CustomerService } from '../../../services/customer.service';
+import { CustomerService } from '../../core/services/customer/customer.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
