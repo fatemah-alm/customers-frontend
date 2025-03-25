@@ -26,7 +26,12 @@
       (click)="$event.stopPropagation()"
       class="absolute right-0 mt-2 bg-white rounded shadow-md p-4 w-40 hidden opacity-0 transition-opacity duration-300"
     >
-      <div class="hover:bg-gray-200 p-2 cursor-pointer">Edit Customer</div>
+      <div
+        class="hover:bg-gray-200 p-2 cursor-pointer"
+        (click)="openEditDialog(customer)"
+      >
+        Edit Customer
+      </div>
       <div class="hover:bg-gray-200 p-2 cursor-pointer" (click)="showWarning()">
         Delete Customer
       </div>

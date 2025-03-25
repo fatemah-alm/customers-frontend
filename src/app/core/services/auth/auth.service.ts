@@ -8,34 +8,27 @@ import LoginResponse from './models/LoginResponse';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8000/api/auth';
+  private tokenKey = 'authtoken';
 
   constructor(private http: HttpClient) {}
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('authToken');
+    return !!localStorage.getItem(this.tokenKey);
   }
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http
-      .post<LoginResponse>(`${this.apiUrl}/login`, credentials)
-      .pipe(
-        tap({
-          next: (response) => {
-            this.setToken(response.token);
-          },
-        })
-      );
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
   }
 
   setToken(token: string): void {
-    localStorage.setItem('authToken', token);
+    localStorage.setItem(this.tokenKey, token);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('authToken');
+    return localStorage.getItem(this.tokenKey);
   }
 
   logout(): void {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem(this.tokenKey);
   }
 }

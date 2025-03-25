@@ -6,6 +6,8 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
+import { EditCustomerDialogComponent } from '../edit-customer-dialog/edit-customer-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-customer-card',
@@ -17,7 +19,13 @@ export class CustomerCardComponent {
   private listElement: HTMLElement | null = null;
   @Input() customer: any;
   @Output() deleteCustomer = new EventEmitter<string>();
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  @Output() customerUpdated = new EventEmitter<void>();
+
+  constructor(
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private dialog: MatDialog
+  ) {}
 
   toggleList(event: Event) {
     this.listElement = (event.currentTarget as HTMLElement)
@@ -31,7 +39,6 @@ export class CustomerCardComponent {
         this.renderer.addClass(this.listElement, 'opacity-100');
       }, 10);
 
-      // Delay adding the outside click listener to prevent instant closing
       setTimeout(() => {
         document.addEventListener('click', this.handleOutsideClick);
       }, 100);
@@ -82,5 +89,16 @@ export class CustomerCardComponent {
   onDelete() {
     this.deleteCustomer.emit(this.customer.id);
     this.hideWarning();
+  }
+
+  onCustomerUpdated() {
+    this.customerUpdated.emit(); // Bubble the event up to customers.component.ts
+  }
+
+  openEditDialog(customer: any) {
+    this.dialog.open(EditCustomerDialogComponent, {
+      width: '400px',
+      data: customer,
+    });
   }
 }

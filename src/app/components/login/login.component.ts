@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-
+  loginError: boolean = false;
   constructor(private authService: AuthService, private router: Router) {
     this.loginForm = new FormGroup({
       email: new FormControl<string>('', [
@@ -43,8 +43,8 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       console.log(this.loginForm.value);
       this.authService.login(this.loginForm.value).subscribe({
-        next: (v) => console.log(v),
-        error: (e) => console.log(e),
+        next: (v) => this.authService.setToken(v.accessToken),
+        error: (e) => (this.loginError = true),
         complete: () => {
           console.log('login successful');
           this.router.navigate(['']);

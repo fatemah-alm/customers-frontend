@@ -1,5 +1,5 @@
 interface LoginResponse {
-  token: string;
+  accessToken: string;
 }
 
 export default LoginResponse;
