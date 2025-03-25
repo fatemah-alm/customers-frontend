@@ -8,16 +8,33 @@ import {
 } from '@angular/forms';
 import { CustomerService } from '../../core/services/customer/customer.service';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { Router } from '@angular/router';
+import { PaginationComponent } from '../pagination/pagination.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CustomerCardComponent, ReactiveFormsModule, CommonModule],
+  imports: [
+    CustomerCardComponent,
+    ReactiveFormsModule,
+    CommonModule,
+    PaginationComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   template: ` <button (click)="openPopup()">Open Popup</button> `,
 })
 export class DashboardComponent {
   customers: any[] = [];
+  currentPage: number = 1;
+  totalPages: number = 1;
+  limit: number = 5;
+  duplicateError: boolean = false;
+  duplicateErrorMessage: string = '';
+  generalError: boolean = false;
+  generalErrorMessage: string = '';
+
   addCustomerForm = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
@@ -39,6 +56,8 @@ export class DashboardComponent {
 
   constructor(
     private customerService: CustomerService,
+    private authService: AuthService,
+    private router: Router,
     private el: ElementRef,
     private renderer: Renderer2
   ) {}
@@ -67,10 +86,18 @@ export class DashboardComponent {
   }
 
   loadCustomers() {
-    this.customerService.getCustomers().subscribe((data: any) => {
-      this.customers = data;
-      console.log(this.customers);
-    });
+    this.customerService
+      .getCustomers(this.currentPage, this.limit)
+      .subscribe((data: any) => {
+        this.customers = data.customers;
+        this.totalPages = data.totalPages;
+        console.log(this.customers);
+      });
+  }
+
+  onPageChanged(page: number) {
+    this.currentPage = page;
+    this.loadCustomers();
   }
 
   showDialog() {
@@ -103,7 +130,23 @@ export class DashboardComponent {
 
     this.customerService.addCustomer(payload).subscribe({
       next: (v) => console.log(v),
-      error: (e) => console.log(e),
+      error: (e: HttpErrorResponse) => {
+        console.log(e);
+        if (e.status === 409) {
+          this.duplicateError = true;
+          this.duplicateErrorMessage = 'This customer number already exists.';
+        } else if (e.status === 401) {
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        } else {
+          this.generalError = true;
+          this.generalErrorMessage =
+            'An error occurred while adding the customer.';
+        }
+        setTimeout(() => {
+          this.duplicateError = false;
+        }, 5000);
+      },
       complete: () => {
         this.loadCustomers();
         this.hideDialog();

@@ -30,6 +30,14 @@
       (deleteCustomer)="onDeleteCustomer($event)"
     ></app-customer-card>
   </div>
+  <!--pagination component--->
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (pageChanged)="onPageChanged($event)"
+  ></app-pagination>
+
+  <!----add customers form--->
   <form [formGroup]="addCustomerForm" (ngSubmit)="onFormSubmit()">
     <div
       id="dialog"
@@ -79,6 +87,9 @@
         >
           Number must be exactly 9 digits.
         </p>
+        <div *ngIf="duplicateError" class="text-red-500">
+          {{ duplicateErrorMessage }}
+        </div>
         <h1 class="mt-2 text-indigo-700">Date of birth</h1>
         <input
           placeholder="yyyy-mm-dd"
@@ -122,6 +133,7 @@
             <label for="F">F</label>
           </div>
         </div>
+
         <div class="flex justify-end">
           <div class="mt-2 justify-around flex w-50">
             <button

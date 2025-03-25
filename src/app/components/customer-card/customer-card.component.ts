@@ -19,7 +19,6 @@ export class CustomerCardComponent {
   private listElement: HTMLElement | null = null;
   @Input() customer: any;
   @Output() deleteCustomer = new EventEmitter<string>();
-  @Output() customerUpdated = new EventEmitter<void>();
 
   constructor(
     private el: ElementRef,
@@ -89,10 +88,6 @@ export class CustomerCardComponent {
   onDelete() {
     this.deleteCustomer.emit(this.customer.id);
     this.hideWarning();
-  }
-
-  onCustomerUpdated() {
-    this.customerUpdated.emit(); // Bubble the event up to customers.component.ts
   }
 
   openEditDialog(customer: any) {
