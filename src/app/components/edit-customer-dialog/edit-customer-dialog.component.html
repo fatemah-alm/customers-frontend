@@ -29,6 +29,9 @@
     >
       Number must be exactly 9 digits.
     </p>
+    <div *ngIf="duplicateError" class="text-red-500">
+      {{ duplicateErrorMessage }}
+    </div>
 
     <label class="block mt-2">Date of Birth</label>
     <input
@@ -36,6 +39,12 @@
       formControlName="dob"
       class="w-full p-2 border rounded"
     />
+    <p
+      class="text-red-500 text-sm"
+      *ngIf="editCustomerForm.controls['dob'].hasError('futureDate')"
+    >
+      Future dates are not allowed.
+    </p>
 
     <label class="block mt-2">Gender</label>
     <select formControlName="gender" class="w-full p-2 border rounded">

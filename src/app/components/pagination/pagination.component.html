@@ -1,9 +1,17 @@
-<div class="pagination">
-  <button (click)="previousPage()" [disabled]="currentPage <= 1">
+<div class="pagination text-indigo-900">
+  <button
+    (click)="previousPage()"
+    [disabled]="currentPage <= 1"
+    class="hover:text-indigo-500 cursor-pointer m-2 disabled:cursor-auto"
+  >
     Previous
   </button>
   <span>Page {{ currentPage }} of {{ totalPages }}</span>
-  <button (click)="nextPage()" [disabled]="currentPage >= totalPages">
+  <button
+    (click)="nextPage()"
+    [disabled]="currentPage >= totalPages"
+    class="hover:text-indigo-500 cursor-pointer m-2 disabled:cursor-auto"
+  >
     Next
   </button>
 </div>

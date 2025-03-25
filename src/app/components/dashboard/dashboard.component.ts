@@ -1,9 +1,11 @@
 import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
 import { CustomerCardComponent } from '../customer-card/customer-card.component';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { CustomerService } from '../../core/services/customer/customer.service';
@@ -12,7 +14,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { PaginationComponent } from '../pagination/pagination.component';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,6 +37,7 @@ export class DashboardComponent {
   duplicateErrorMessage: string = '';
   generalError: boolean = false;
   generalErrorMessage: string = '';
+  maxDate: string = new Date().toISOString().split('T')[0];
 
   addCustomerForm = new FormGroup({
     name: new FormControl<string>('', {
@@ -48,7 +50,7 @@ export class DashboardComponent {
     }),
     dob: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, this.futureDateValidator()],
     }),
     gender: new FormControl<string>('', {
       nonNullable: true,
@@ -61,8 +63,7 @@ export class DashboardComponent {
     private authService: AuthService,
     private router: Router,
     private el: ElementRef,
-    private renderer: Renderer2,
-    private toastr: ToastrService
+    private renderer: Renderer2
   ) {}
 
   get name() {
@@ -82,6 +83,19 @@ export class DashboardComponent {
     if (!/^\d$/.test(charCode)) {
       event.preventDefault();
     }
+  }
+  futureDateValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      if (!control.value) return null; // If no date, no validation needed
+
+      const selectedDate = new Date(control.value);
+      const today = new Date();
+
+      if (selectedDate > today) {
+        return { futureDate: true }; // Validation error
+      }
+      return null; // Valid date
+    };
   }
 
   ngOnInit() {
@@ -154,7 +168,6 @@ export class DashboardComponent {
       complete: () => {
         this.loadCustomers();
         this.hideDialog();
-        this.toastr.success('customer added');
       },
     });
   }
@@ -164,6 +177,9 @@ export class DashboardComponent {
       console.log('Customer deleted');
     });
     this.customers = this.customers.filter(
+      (customer) => customer.id !== customerId
+    );
+    this.allCustomers = this.allCustomers.filter(
       (customer) => customer.id !== customerId
     );
   }
