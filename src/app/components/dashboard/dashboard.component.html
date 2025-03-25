@@ -2,7 +2,7 @@
   <div class="flex justify-between">
     <div>
       <h3 class="text-indigo-700 text-2xl">List of customers</h3>
-      <p class="opacity-30 text-sm">{{ customers.length }} customers</p>
+      <p class="opacity-30 text-sm">{{ allCustomers.length }} customers</p>
     </div>
     <div>
       <div
@@ -28,6 +28,7 @@
       *ngFor="let customer of customers"
       [customer]="customer"
       (deleteCustomer)="onDeleteCustomer($event)"
+      (customerUpdated)="loadCustomers()"
     ></app-customer-card>
   </div>
   <!--pagination component--->

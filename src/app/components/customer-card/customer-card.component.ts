@@ -19,6 +19,7 @@ export class CustomerCardComponent {
   private listElement: HTMLElement | null = null;
   @Input() customer: any;
   @Output() deleteCustomer = new EventEmitter<string>();
+  @Output() customerUpdated = new EventEmitter<void>();
 
   constructor(
     private el: ElementRef,
@@ -93,7 +94,7 @@ export class CustomerCardComponent {
   openEditDialog(customer: any) {
     this.dialog.open(EditCustomerDialogComponent, {
       width: '400px',
-      data: customer,
+      data: { customer, onSuccess: () => this.customerUpdated.emit() },
     });
   }
 }

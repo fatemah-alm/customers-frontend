@@ -22,23 +22,23 @@ export class EditCustomerDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<EditCustomerDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public customer: any,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private customerService: CustomerService
   ) {
     this.editCustomerForm = new FormGroup({
-      name: new FormControl<string>(customer.name, {
+      name: new FormControl<string>(data.customer.name, {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      number: new FormControl<string>(customer.number, {
+      number: new FormControl<string>(data.customer.number, {
         nonNullable: true,
         validators: [Validators.required, Validators.minLength(9)],
       }),
-      dob: new FormControl<string>(this.formatDate(customer.dob), {
+      dob: new FormControl<string>(this.formatDate(data.customer.dob), {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      gender: new FormControl<string>(customer.gender, {
+      gender: new FormControl<string>(data.customer.gender, {
         nonNullable: true,
         validators: [Validators.required],
       }),
@@ -52,19 +52,19 @@ export class EditCustomerDialogComponent {
   onSubmit() {
     if (this.editCustomerForm.valid) {
       const updatedCustomer = {
-        ...this.customer,
+        ...this.data.customer,
         ...this.editCustomerForm.value,
         number: Number(this.editCustomerForm.value.number),
         dob: new Date(this.editCustomerForm.value.dob).toISOString(),
       };
 
       this.customerService
-        .updateCustomer(this.customer.id, updatedCustomer)
+        .updateCustomer(this.data.customer.id, updatedCustomer)
         .subscribe({
           next: (v) => console.log(v),
           error: (e) => console.log(e),
           complete: () => {
-            this.customerUpdated.emit();
+            this.data.onSuccess();
             this.dialogRef.close(updatedCustomer);
             console.log(updatedCustomer);
           },

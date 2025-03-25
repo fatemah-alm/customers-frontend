@@ -12,6 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,6 +28,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
 })
 export class DashboardComponent {
   customers: any[] = [];
+  allCustomers: any[] = [];
   currentPage: number = 1;
   totalPages: number = 1;
   limit: number = 5;
@@ -59,7 +61,8 @@ export class DashboardComponent {
     private authService: AuthService,
     private router: Router,
     private el: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private toastr: ToastrService
   ) {}
 
   get name() {
@@ -90,6 +93,7 @@ export class DashboardComponent {
       .getCustomers(this.currentPage, this.limit)
       .subscribe((data: any) => {
         this.customers = data.customers;
+        this.allCustomers = data.allCustomers;
         this.totalPages = data.totalPages;
         console.log(this.customers);
       });
@@ -150,7 +154,7 @@ export class DashboardComponent {
       complete: () => {
         this.loadCustomers();
         this.hideDialog();
-        // add here toast for customer added succesfully
+        this.toastr.success('customer added');
       },
     });
   }
