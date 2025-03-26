@@ -104,9 +104,29 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
+    const savedState = sessionStorage.getItem('customerFilters');
+    if (savedState) {
+      const state = JSON.parse(savedState);
+      this.currentPage = state.currentPage;
+      this.limit = state.limit;
+      this.searchQuery = state.searchQuery;
+      this.selectedGender = state.selectedGender;
+    }
     this.loadCustomers();
   }
 
+  updateFilters(): void {
+    const state = {
+      currentPage: this.currentPage,
+      limit: this.limit,
+      searchQuery: this.searchQuery,
+      selectedGender: this.selectedGender,
+    };
+
+    sessionStorage.setItem('customerFilters', JSON.stringify(state));
+
+    this.loadCustomers();
+  }
   loadCustomers() {
     this.customerService
       .getCustomers(
@@ -124,15 +144,20 @@ export class DashboardComponent {
   }
   onSearchChange(): void {
     this.currentPage = 1;
+    this.updateFilters();
     this.loadCustomers();
   }
 
   onPageChanged(page: number) {
     this.currentPage = page;
+    this.updateFilters();
+
     this.loadCustomers();
   }
   onFilterChange(): void {
     this.currentPage = 1;
+    this.updateFilters();
+
     this.loadCustomers();
   }
 
