@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   ValidatorFn,
   Validators,
+  FormsModule,
 } from '@angular/forms';
 import { CustomerService } from '../../core/services/customer/customer.service';
 import { CommonModule } from '@angular/common';
@@ -22,6 +23,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
     ReactiveFormsModule,
     CommonModule,
     PaginationComponent,
+    FormsModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -30,6 +32,8 @@ import { PaginationComponent } from '../pagination/pagination.component';
 export class DashboardComponent {
   customers: any[] = [];
   allCustomers: any[] = [];
+  filteredCustomers: any[] = [];
+  selectedGender = '';
   currentPage: number = 1;
   totalPages: number = 1;
   limit: number = 5;
@@ -38,6 +42,7 @@ export class DashboardComponent {
   generalError: boolean = false;
   generalErrorMessage: string = '';
   maxDate: string = new Date().toISOString().split('T')[0];
+  searchQuery: string = '';
 
   addCustomerForm = new FormGroup({
     name: new FormControl<string>('', {
@@ -104,7 +109,12 @@ export class DashboardComponent {
 
   loadCustomers() {
     this.customerService
-      .getCustomers(this.currentPage, this.limit)
+      .getCustomers(
+        this.currentPage,
+        this.limit,
+        this.searchQuery,
+        this.selectedGender
+      )
       .subscribe((data: any) => {
         this.customers = data.customers;
         this.allCustomers = data.allCustomers;
@@ -112,9 +122,17 @@ export class DashboardComponent {
         console.log(this.customers);
       });
   }
+  onSearchChange(): void {
+    this.currentPage = 1;
+    this.loadCustomers();
+  }
 
   onPageChanged(page: number) {
     this.currentPage = page;
+    this.loadCustomers();
+  }
+  onFilterChange(): void {
+    this.currentPage = 1;
     this.loadCustomers();
   }
 
