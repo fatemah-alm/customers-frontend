@@ -21,7 +21,9 @@ export class CustomerService {
       limit,
     };
 
-    if (searchTerm) {
+    if (!isNaN(parseInt(searchTerm))) {
+      params.number = parseInt(searchTerm);
+    } else if (searchTerm) {
       params.search = searchTerm;
     }
 
