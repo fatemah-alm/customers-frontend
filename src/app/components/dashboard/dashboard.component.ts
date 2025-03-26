@@ -211,8 +211,22 @@ export class DashboardComponent {
       complete: () => {
         this.loadCustomers();
         this.hideDialog();
+        this.showSuccessToast();
       },
     });
+  }
+
+  showSuccessToast() {
+    const toast = document.getElementById('toast-success');
+    if (toast) {
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 3000);
+    }
   }
 
   onDeleteCustomer(customerId: string) {
