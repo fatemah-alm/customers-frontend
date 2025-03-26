@@ -4,9 +4,13 @@
       <h3 class="text-white">customers dashboard</h3>
     </a>
 
-    <div class="ms-auto flex items-center">
+    <div class="ms-auto flex items-center justify-between w-50">
+      <div *ngIf="username" class="text-white font-sans">
+        Hello, {{ username }}!
+      </div>
+
       <a
-        class="text-white px-4 py-2 rounded cursor-pointer"
+        class="text-white px-4 py-2 rounded cursor-pointer border"
         *ngIf="authService.isLoggedIn() && !isLoginPage()"
         (click)="logout()"
       >

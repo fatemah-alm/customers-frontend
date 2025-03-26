@@ -10,11 +10,19 @@ import { CommonModule } from '@angular/common';
   styleUrl: './nav-bar.component.css',
 })
 export class NavBarComponent {
+  username: string | null = '';
+
   constructor(public authService: AuthService, private router: Router) {}
+  ngOnInit(): void {
+    const user = this.authService.getUserFromToken();
+    this.username = user ? user.username : null;
+    console.log('username', this.username);
+  }
 
   logout() {
     this.authService.logout(); // Clears token
-    this.router.navigate(['/login']); // Redirect to login page
+    this.username = null;
+    this.router.navigate(['/login']);
   }
 
   isLoginPage(): boolean {

@@ -44,6 +44,7 @@ export class LoginComponent {
       console.log(this.loginForm.value);
       this.authService.login(this.loginForm.value).subscribe({
         next: (v) => this.authService.setToken(v.accessToken),
+
         error: (e) => (this.loginError = true),
         complete: () => {
           console.log('login successful');

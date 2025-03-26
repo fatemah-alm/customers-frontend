@@ -1,22 +1,22 @@
 <div class="md:w-1/0.2 bg-indigo-200 h-168 md:mx-30 m-10 rounded p-4 relative">
   <div class="flex justify-between">
     <div class="w-[50%]">
-      <h3 class="text-indigo-700 text-2xl">List of customers</h3>
+      <h3 class="text-indigo-700 md:text-2xl text-sm">List of customers</h3>
       <p class="opacity-30 text-sm">{{ allCustomers.length }} customers</p>
     </div>
-    <div class="flex justify-between items-center w-[40%]">
+    <div class="md:flex md:justify-between md:items-center md:w-[40%] w-40">
       <input
         type="text"
         [(ngModel)]="searchQuery"
         (ngModelChange)="onSearchChange()"
         placeholder="Search customers..."
-        class="p-2 border rounded w-[60%]"
+        class="p-2 border rounded md:w-[60%] md:h-11 w-40 h-7"
       />
       <div class="flex justify-between items-center p-3">
         <div class="flex items-center space-x-2">
           <!-- Gender Filter Dropdown -->
           <select
-            class="p-2 border rounded"
+            class="p-2 border rounded md:h-11 h-7 text-sm"
             [(ngModel)]="selectedGender"
             (change)="onFilterChange()"
           >
@@ -28,7 +28,7 @@
       </div>
       <div
         (click)="showDialog()"
-        class="bg-indigo-700 h-11 text-white items-center justify-center flex px-4 py-2 rounded hover:cursor-pointer w-40"
+        class="bg-indigo-700 md:h-11 h-7 text-white items-center justify-center flex px-4 py-2 rounded hover:cursor-pointer w-10 md:w-40"
       >
         add customer
       </div>

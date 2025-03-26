@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import LoginResponse from './models/LoginResponse';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,19 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
+  }
+
+  getUserFromToken(): any {
+    const token = this.getToken();
+    if (token) {
+      try {
+        return jwtDecode(token);
+      } catch (error) {
+        console.error('Invalid token:', error);
+        return null;
+      }
+    }
+    return null;
   }
 
   logout(): void {
