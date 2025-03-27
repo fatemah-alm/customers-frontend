@@ -20,11 +20,18 @@ export class AuthService {
   }
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/login`, credentials)
+      .pipe(
+        tap((response) => {
+          this.setToken(response.accessToken);
+        })
+      );
   }
 
   setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
+    this.userSubject.next(this.getUserFromToken());
   }
 
   getToken(): string | null {
@@ -46,5 +53,6 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    this.userSubject.next(null);
   }
 }

@@ -28,7 +28,7 @@ export class EditCustomerDialogComponent {
   duplicateErrorMessage: string = '';
   generalError: boolean = false;
   generalErrorMessage: string = '';
-  @Output() customerUpdated = new EventEmitter<void>();
+  // @Output() customerUpdated = new EventEmitter<void>();
 
   constructor(
     public dialogRef: MatDialogRef<EditCustomerDialogComponent>,

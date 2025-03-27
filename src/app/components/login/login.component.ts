@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   loginForm: FormGroup;
   loginError: boolean = false;
+
   constructor(private authService: AuthService, private router: Router) {
     this.loginForm = new FormGroup({
       email: new FormControl<string>('', [
@@ -49,7 +50,6 @@ export class LoginComponent {
         complete: () => {
           console.log('login successful');
           this.router.navigate(['']);
-          // add here toast for customer added succesfully
         },
       });
     }

@@ -14,9 +14,16 @@ export class NavBarComponent {
 
   constructor(public authService: AuthService, private router: Router) {}
   ngOnInit(): void {
-    const user = this.authService.getUserFromToken();
-    this.username = user ? user.username : null;
-    console.log('username', this.username);
+    this.authService.user$.subscribe((user) => {
+      this.username = user ? user.username : null;
+    });
+  }
+
+  setUsername() {
+    this.authService.user$.subscribe((user) => {
+      this.username = user ? user.username : null;
+    });
+    this.ngOnInit();
   }
 
   logout() {
